@@ -1,3 +1,4 @@
+mod circle;
 mod direction;
 mod planet;
 mod point;

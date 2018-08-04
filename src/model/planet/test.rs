@@ -11,31 +11,37 @@ mod new {
     use super::*;
 
     #[test]
-    fn it_sets_location_radius_and_ordinal() {
+    fn it_sets_mass_from_location_and_radius() {
         let (location, planet) = setup();
+        let mass = planet.mass;
 
-        assert_eq!(planet.location, location);
-        assert_eq!(planet.radius, 0.1);
+        assert_eq!(mass.center, location);
+        assert_eq!(mass.radius, 0.1);
+    }
+
+    #[test]
+    fn it_sets_ordinal() {
+        let (_, planet) = setup();
         assert_eq!(planet.ordinal, 3);
     }
 }
 
-mod collided {
+mod orbital_zone {
     use super::*;
 
     #[test]
-    fn it_returns_true_if_inside_of_radius() {
-        let (_, planet) = setup();
-        let point = Point::new(0.57, 0.57);
+    fn it_returns_a_circle_with_the_same_center() {
+        let (location, planet) = setup();
+        let circle = planet.orbital_zone();
 
-        assert!(planet.collided(point));
+        assert_eq!(circle.center, location);
     }
 
     #[test]
-    fn it_returns_false_if_outside_of_radius() {
+    fn it_returns_a_circle_with_three_times_the_radius() {
         let (_, planet) = setup();
-        let point = Point::new(0.58, 0.58);
+        let circle = planet.orbital_zone();
 
-        assert!(!planet.collided(point));
+        assert_approx_eq!(circle.radius, 0.3);
     }
 }
