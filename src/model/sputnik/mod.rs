@@ -11,12 +11,24 @@ pub struct Sputnik {
 
 impl Sputnik {
     pub fn new(heading: Direction, location: Point) -> Self {
-        Sputnik {
+        Self {
             heading,
             travelling: heading,
             location,
             thruster: None,
         }
+    }
+
+    pub fn left_thruster(&self) -> Self {
+        Self { thruster: Some(Thruster::Left), .. *self }
+    }
+
+    pub fn right_thruster(&self) -> Self {
+        Self { thruster: Some(Thruster::Right), .. *self }
+    }
+
+    pub fn no_thruster(&self) -> Self {
+        Self { thruster: None, .. *self }
     }
 }
 
