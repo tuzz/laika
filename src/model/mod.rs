@@ -1,2 +1,2 @@
-mod point;
 mod direction;
+mod point;

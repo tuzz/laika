@@ -31,7 +31,7 @@ impl Add for Point {
         let x = self.x + other.x;
         let y = self.y + other.y;
 
-        Point::new(x, y)
+        Self::new(x, y)
     }
 }
 
@@ -42,7 +42,7 @@ impl Sub for Point {
         let x = self.x - other.x;
         let y = self.y - other.y;
 
-        Point::new(x, y)
+        Self::new(x, y)
     }
 }
 

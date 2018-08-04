@@ -1,10 +1,12 @@
+use std::ops::{Add,Sub};
+
 pub struct Direction {
     degrees: f64,
 }
 
 impl Direction {
     pub fn new(degrees: f64) -> Self {
-        Direction { degrees: Self::normalize(degrees) }
+        Self { degrees: Self::normalize(degrees) }
     }
 
     fn normalize(degrees: f64) -> f64 {
@@ -15,6 +17,22 @@ impl Direction {
         } else {
             m
         }
+    }
+}
+
+impl Add for Direction {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        Self::new(self.degrees + other.degrees)
+    }
+}
+
+impl Sub for Direction {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        Self::new(self.degrees - other.degrees)
     }
 }
 
