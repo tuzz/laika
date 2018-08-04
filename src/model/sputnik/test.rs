@@ -25,4 +25,14 @@ mod new {
 
         assert_eq!(sputnik.travelling, heading);
     }
+
+    #[test]
+    fn it_sets_thruster_to_none() {
+        let heading = Direction::new(270.0);
+        let location = Point::new(0.1, 0.2);
+
+        let sputnik = Subject::new(heading, location);
+
+        assert_eq!(sputnik.thruster, None);
+    }
 }
