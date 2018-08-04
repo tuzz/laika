@@ -1,5 +1,6 @@
 use std::ops::{Add,Sub};
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Direction {
     degrees: f64,
 }
