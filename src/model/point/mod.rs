@@ -1,3 +1,5 @@
+use std::ops::{Add,Sub};
+
 pub struct Point {
     x: f64,
     y: f64,
@@ -19,6 +21,28 @@ impl Point {
         } else {
             m
         }
+    }
+}
+
+impl Add for Point {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        let x = self.x + other.x;
+        let y = self.y + other.y;
+
+        Point::new(x, y)
+    }
+}
+
+impl Sub for Point {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        let x = self.x - other.x;
+        let y = self.y - other.y;
+
+        Point::new(x, y)
     }
 }
 
