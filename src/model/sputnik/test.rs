@@ -3,7 +3,7 @@ use super::*;
 fn setup() -> (Direction, Point, Sputnik) {
     let heading = Direction::new(270.0);
     let location = Point::new(0.1, 0.2);
-    let sputnik = Sputnik::new(heading, location);
+    let sputnik = Sputnik::new(heading, location, 0.01);
 
     (heading, location, sputnik)
 }
@@ -29,6 +29,21 @@ mod new {
     fn it_sets_thruster_to_none() {
         let (_, _, sputnik) = setup();
         assert_eq!(sputnik.thruster, None);
+    }
+
+    #[test]
+    fn it_builds_a_hull_with_area_equal_to_hull_area() {
+        let (_, _, sputnik) = setup();
+        assert_approx_eq!(sputnik.hull.area(), 0.01);
+    }
+
+    #[test]
+    fn it_builds_a_hull_centered_at_half_half() {
+        let (_, _, sputnik) = setup();
+        let centroid = sputnik.hull.centroid();
+
+        assert_approx_eq!(centroid.x, 0.5);
+        assert_approx_eq!(centroid.y, 0.5);
     }
 }
 
