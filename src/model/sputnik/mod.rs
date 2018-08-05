@@ -3,6 +3,7 @@ use super::point::Point;
 use super::thruster::Thruster;
 use super::triangle::Triangle;
 
+#[derive(Clone, Debug, PartialEq)]
 pub struct Sputnik {
     hull: Triangle,
     location: Point,

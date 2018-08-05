@@ -1,5 +1,6 @@
 mod circle;
 mod direction;
+mod galaxy;
 mod planet;
 mod point;
 mod random;

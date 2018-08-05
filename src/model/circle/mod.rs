@@ -1,5 +1,6 @@
 use super::point::Point;
 
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Circle {
     pub center: Point,
     pub radius: f64,
