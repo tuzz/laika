@@ -55,19 +55,23 @@ impl Galaxy {
     }
 
     fn add_random_planet(&self, radii: &RandF, locations: &RandF, ordinal: usize) -> Option<Self> {
-        let radius = radii.sample();
-        let location = self.random_location(locations, radius)?;
-        let planet = Planet::new(location, radius, ordinal);
+        let height = 2.0; // TODO: parameterize
 
+        let radius = radii.sample();
+        let height = Planet::zone_height(radius, height);
+        let location = self.random_location(locations, height)?;
+
+        let planet = Planet::new(location, radius, height, ordinal);
         Some(self.add_planet(planet))
     }
 
     fn add_random_sputnik(&self, areas: &RandF, locations: &RandF, directions: &RandF) -> Option<Self> {
         let heading = Direction::new(directions.sample());
         let area = areas.sample();
-        let location = self.random_location(locations, area)?;
-        let sputnik = Sputnik::new(heading, location, area);
+        let radius = Sputnik::hull_radius(area);
+        let location = self.random_location(locations, radius)?;
 
+        let sputnik = Sputnik::new(heading, location, area);
         Some(self.add_sputnik(sputnik))
     }
 
@@ -85,7 +89,7 @@ impl Galaxy {
     }
 
     fn away_from_planets(&self, circle: Circle) -> bool {
-        !self.planets.iter().any(|p| p.orbital_zone().intersects(circle))
+        !self.planets.iter().any(|p| p.zone.intersects(circle))
     }
 
     fn extend<T: Clone>(vec: &Vec<T>, element: T) -> Vec<T> {

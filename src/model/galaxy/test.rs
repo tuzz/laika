@@ -25,22 +25,22 @@ mod random {
 
     #[test]
     fn it_generates_a_random_galaxy_with_planet_and_sputnik_parameters() {
-        for _ in 0..20 {
+        for _ in 0..100 {
             let planets = 3..=5;
-            let radii = 0.05..=0.1;
+            let radii = 0.02..=0.05;
             let sputniks = 7..=10;
             let areas = 0.01..=0.02;
-            let margins = 0.02..=0.05;
+            let margins = 0.05..=0.1;
 
             let option = Subject::random(planets, radii, sputniks, areas, margins);
             let galaxy = option.unwrap();
 
             assert_between(3, 5, galaxy.planets.len());
             assert_between(7, 10, galaxy.sputniks.len());
-            assert_between(0.02, 0.05, galaxy.margin);
+            assert_between(0.05, 0.1, galaxy.margin);
 
             for planet in galaxy.planets {
-                assert_between(0.05, 0.1, planet.mass.radius);
+                assert_between(0.02, 0.05, planet.mass.radius);
             }
 
             for sputnik in galaxy.sputniks {
@@ -59,6 +59,32 @@ mod random {
     }
 
     #[test]
+    fn it_positions_planets_away_from_other_planets() {
+        for _ in 0..100 {
+            let galaxy = Subject::random(2..=2, 0.1..=0.1, 0..=0, 0.0..=0.0, 0.0..=0.0);
+            let planets = galaxy.unwrap().planets;
+
+            let zone1 = planets[0].zone;
+            let zone2 = planets[1].zone;
+
+            assert!(!zone1.intersects(zone2))
+        }
+    }
+
+    #[test]
+    fn it_positions_sputniks_away_from_planets() {
+        for _ in 0..100 {
+            let option = Subject::random(1..=1, 0.1..=0.1, 1..=1, 0.1..=0.1, 0.0..=0.0);
+            let galaxy = option.unwrap();
+
+            let zone = galaxy.planets[0].zone;
+            let hull = galaxy.sputniks[0].hull;
+
+            assert!(!zone.intersects(hull.bounding_circle()))
+        }
+    }
+
+    #[test]
     fn it_returns_none_if_it_fails_to_build_a_galaxy_with_the_parameters() {
         let option = Subject::random(100..=100, 0.1..=0.1, 0..=0, 0.0..=0.0, 0.0..=0.0);
         assert_eq!(option, None);
@@ -72,7 +98,7 @@ mod add_planet {
     fn it_adds_the_planet_to_the_galaxy() {
         let galaxy = Subject::new(vec![], vec![], 0.05);
         let location = Point::new(0.5, 0.5);
-        let planet = Planet::new(location, 0.1, 3);
+        let planet = Planet::new(location, 0.1, 2.0, 3);
 
         let copy = galaxy.add_planet(planet);
 
@@ -115,9 +141,9 @@ mod random_location {
     }
 
     #[test]
-    fn it_picks_locations_outside_orbital_zones() {
-        let planet = Planet::new(Point::new(0.5, 0.5), 0.1, 3);
-        let zone = planet.orbital_zone();
+    fn it_picks_locations_outside_planet_zones() {
+        let planet = Planet::new(Point::new(0.5, 0.5), 0.1, 2.0, 3);
+        let zone = planet.zone.clone();
 
         let galaxy = Subject::new(vec![], vec![], 0.05).add_planet(planet);
         let distribution = Random::new(0.0..=1.0);
@@ -129,9 +155,9 @@ mod random_location {
     }
 
     #[test]
-    fn it_picks_locations_some_distance_away_from_orbital_zones() {
-        let planet = Planet::new(Point::new(0.5, 0.5), 0.1, 3);
-        let zone = planet.orbital_zone();
+    fn it_picks_locations_some_distance_away_from_planet_zones() {
+        let planet = Planet::new(Point::new(0.5, 0.5), 0.1, 2.0, 3);
+        let zone = planet.zone.clone();
 
         let galaxy = Subject::new(vec![], vec![], 0.05).add_planet(planet);
         let distribution = Random::new(0.0..=1.0);
@@ -147,7 +173,7 @@ mod random_location {
 
     #[test]
     fn it_returns_none_if_it_cant_find_a_point() {
-        let planet = Planet::new(Point::new(0.5, 0.5), 0.1, 3);
+        let planet = Planet::new(Point::new(0.5, 0.5), 0.1, 2.0, 3);
         let galaxy = Subject::new(vec![], vec![], 0.05).add_planet(planet);
         let distribution = Random::new(0.0..=1.0);
         let location = galaxy.random_location(&distribution, 1.0);
