@@ -5,11 +5,11 @@ use super::triangle::Triangle;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Sputnik {
-    hull: Triangle,
-    location: Point,
-    travelling: Direction,
-    heading: Direction,
-    thruster: Option<Thruster>,
+    pub hull: Triangle,
+    pub location: Point,
+    pub travelling: Direction,
+    pub heading: Direction,
+    pub thruster: Option<Thruster>,
 }
 
 impl Sputnik {

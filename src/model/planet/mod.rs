@@ -3,8 +3,8 @@ use super::circle::Circle;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Planet {
-    mass: Circle,
-    ordinal: usize,
+    pub mass: Circle,
+    pub ordinal: usize,
 }
 
 impl Planet {
