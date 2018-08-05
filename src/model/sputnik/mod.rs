@@ -6,7 +6,6 @@ use super::triangle::Triangle;
 #[derive(Clone, Debug, PartialEq)]
 pub struct Sputnik {
     pub hull: Triangle,
-    pub location: Point,
     pub travelling: Direction,
     pub heading: Direction,
     pub thruster: Option<Thruster>,
@@ -20,7 +19,6 @@ impl Sputnik {
             hull,
             heading,
             travelling: heading,
-            location,
             thruster: None,
         }
     }

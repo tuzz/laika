@@ -14,11 +14,9 @@ mod new {
     use super::*;
 
     #[test]
-    fn it_sets_heading_and_location() {
-        let (heading, location, sputnik) = setup();
-
+    fn it_sets_heading() {
+        let (heading, _, sputnik) = setup();
         assert_eq!(sputnik.heading, heading);
-        assert_eq!(sputnik.location, location);
     }
 
     #[test]
