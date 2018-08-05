@@ -17,7 +17,7 @@ struct Galaxy {
 type R<T> = RangeInclusive<T>;
 type RandF = Random<f64>;
 
-const MAX_ATTEMPTS: usize = 100;
+const MAX_ATTEMPTS: usize = 1000;
 
 impl Galaxy {
     fn new(planets: Vec<Planet>, sputniks: Vec<Sputnik>, margin: f64) -> Self {
@@ -80,7 +80,7 @@ impl Galaxy {
             let point = Point::new(rand.sample(), rand.sample());
             let circle = Circle::new(point, clearance);
 
-            if self.away_from_planets(circle) {
+            if self.away_from_planets(circle) && self.away_from_margin(circle) {
                 return Some(point);
             }
         }
@@ -90,6 +90,19 @@ impl Galaxy {
 
     fn away_from_planets(&self, circle: Circle) -> bool {
         !self.planets.iter().any(|p| p.zone.intersects(circle))
+    }
+
+    fn away_from_margin(&self, circle: Circle) -> bool {
+        let c = circle;
+        let (x, y) = (c.center.x, c.center.y);
+        let margin = self.margin;
+
+        let p1 = Point::new(margin, y);
+        let p2 = Point::new(1.0 - margin, y);
+        let p3 = Point::new(x, margin);
+        let p4 = Point::new(x, 1.0 - margin);
+
+        !c.contains(p1) && !c.contains(p2) && !c.contains(p3) && !c.contains(p4)
     }
 
     fn extend<T: Clone>(vec: &Vec<T>, element: T) -> Vec<T> {
