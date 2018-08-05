@@ -12,29 +12,36 @@ mod new {
         assert_eq!(point.x, 0.1);
         assert_eq!(point.y, 0.2);
     }
+}
+
+mod wrap_around {
+    use super::*;
 
     #[test]
     fn it_wraps_around_the_unit_square() {
         let point = Subject::new(-0.1, 1.2);
+        let copy = point.wrap_around();
 
-        assert_approx_eq!(point.x, 0.9);
-        assert_approx_eq!(point.y, 0.2);
+        assert_approx_eq!(copy.x, 0.9);
+        assert_approx_eq!(copy.y, 0.2);
     }
 
     #[test]
     fn it_wraps_around_multiple_times() {
         let point = Subject::new(-1.1, 3.2);
+        let copy = point.wrap_around();
 
-        assert_approx_eq!(point.x, 0.9);
-        assert_approx_eq!(point.y, 0.2);
+        assert_approx_eq!(copy.x, 0.9);
+        assert_approx_eq!(copy.y, 0.2);
     }
 
     #[test]
     fn it_normalises_to_zero_at_the_boundary() {
         let point = Subject::new(1.0, -1.0);
+        let copy = point.wrap_around();
 
-        assert_approx_eq!(point.x, 0.0);
-        assert_approx_eq!(point.y, 0.0);
+        assert_approx_eq!(copy.x, 0.0);
+        assert_approx_eq!(copy.y, 0.0);
     }
 }
 
@@ -63,17 +70,6 @@ mod add {
         assert_approx_eq!(point.x, 0.6);
         assert_approx_eq!(point.y, 0.8);
     }
-
-    #[test]
-    fn it_wraps_around_the_unit_square() {
-        let p1 = Subject::new(0.6, 0.7);
-        let p2 = Subject::new(0.8, 0.9);
-
-        let point = p1 + p2;
-
-        assert_approx_eq!(point.x, 0.4);
-        assert_approx_eq!(point.y, 0.6);
-    }
 }
 
 mod sub {
@@ -88,16 +84,5 @@ mod sub {
 
         assert_approx_eq!(point.x, 0.2);
         assert_approx_eq!(point.y, 0.3);
-    }
-
-    #[test]
-    fn it_wraps_around_the_unit_square() {
-        let p1 = Subject::new(0.1, 0.3);
-        let p2 = Subject::new(0.4, 0.5);
-
-        let point = p1 - p2;
-
-        assert_approx_eq!(point.x, 0.7);
-        assert_approx_eq!(point.y, 0.8);
     }
 }

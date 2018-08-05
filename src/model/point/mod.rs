@@ -8,10 +8,7 @@ pub struct Point {
 
 impl Point {
     pub fn new(x: f64, y: f64) -> Self {
-        let x1 = Self::normalize(x);
-        let y1 = Self::normalize(y);
-
-        Self { x: x1, y: y1 }
+        Self { x, y }
     }
 
     pub fn distance(&self, other: Self) -> f64 {
@@ -19,6 +16,13 @@ impl Point {
         let y = self.y - other.y;
 
         (x.powf(2.0) + y.powf(2.0)).sqrt()
+    }
+
+    pub fn wrap_around(&self) -> Self {
+        let x = Self::normalize(self.x);
+        let y = Self::normalize(self.y);
+
+        Self::new(x, y)
     }
 
     fn normalize(x: f64) -> f64 {
