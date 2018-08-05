@@ -2,6 +2,8 @@ use super::*;
 
 type Subject<T> = Random<T>;
 
+const ITERATIONS: usize = 10_000;
+
 mod sample_one {
     use super::*;
 
@@ -20,7 +22,7 @@ mod sample {
         let random = Subject::new(0..=1);
         let mut sum = 0;
 
-        for _ in 0..10_000 {
+        for _ in 0..ITERATIONS {
             sum += random.sample()
         }
 
@@ -30,14 +32,14 @@ mod sample {
 
     #[test]
     fn it_can_sample_floats() {
-        let random = Subject::new(0.0..=1.0);
+        let random = Subject::new(1.5..=2.5);
         let mut sum = 0.0;
 
-        for _ in 0..10_000 {
+        for _ in 0..ITERATIONS {
             sum += random.sample()
         }
 
-        assert!(sum > 4_800.0);
-        assert!(sum < 5_200.0);
+        assert!(sum > 19_200.0);
+        assert!(sum < 20_800.0);
     }
 }

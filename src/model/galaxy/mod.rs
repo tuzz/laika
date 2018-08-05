@@ -24,17 +24,18 @@ impl Galaxy {
         Galaxy { planets, sputniks, margin }
     }
 
-    fn random(planets: R<usize>, radii: R<f64>, sputniks: R<usize>, areas: R<f64>, margins: R<f64>) -> Option<Self> {
+    fn random(planets: R<usize>, radii: R<f64>, zones: R<f64>, sputniks: R<usize>, areas: R<f64>, margins: R<f64>) -> Option<Self> {
         let margin = Random::sample_one(margins);
         let mut galaxy = Self::new(vec![], vec![], margin);
 
         let radii_rand = Random::new(radii);
         let areas_rand = Random::new(areas);
+        let zones_rand = Random::new(zones);
         let locations_rand = Random::new(margin..=1.0 - margin);
         let directions_rand = Random::new(0.0..=360.0);
 
         for ordinal in 1..=Random::sample_one(planets) {
-            galaxy = galaxy.add_random_planet(&radii_rand, &locations_rand, ordinal)?;
+            galaxy = galaxy.add_random_planet(&radii_rand, &zones_rand, &locations_rand, ordinal)?;
         }
 
         for _ in 0..Random::sample_one(sputniks) {
@@ -54,14 +55,13 @@ impl Galaxy {
         Self::new(self.planets.clone(), sputniks, self.margin)
     }
 
-    fn add_random_planet(&self, radii: &RandF, locations: &RandF, ordinal: usize) -> Option<Self> {
-        let height = 2.0; // TODO: parameterize
-
+    fn add_random_planet(&self, radii: &RandF, zones: &RandF, locations: &RandF, ordinal: usize) -> Option<Self> {
         let radius = radii.sample();
-        let height = Planet::zone_height(radius, height);
+        let zone = zones.sample();
+        let height = Planet::zone_height(radius, zone);
         let location = self.random_location(locations, height)?;
 
-        let planet = Planet::new(location, radius, height, ordinal);
+        let planet = Planet::new(location, radius, zone, ordinal);
         Some(self.add_planet(planet))
     }
 

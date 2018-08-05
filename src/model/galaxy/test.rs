@@ -7,7 +7,7 @@ fn assert_between<T: PartialOrd>(lower: T, upper: T, value: T) {
     assert!(value <= upper);
 }
 
-const ITERATIONS: usize = 1000;
+const ITERATIONS: usize = 1_000;
 
 mod new {
     use super::*;
@@ -27,12 +27,13 @@ mod random {
 
     fn setup() -> Option<Subject> {
         let planets = 3..=5;
-        let radii = 0.02..=0.02;
+        let radii = 0.02..=0.03;
+        let zones = 1.5..=2.5;
         let sputniks = 7..=10;
         let areas = 0.01..=0.02;
         let margins = 0.02..=0.03;
 
-        Subject::random(planets, radii, sputniks, areas, margins)
+        Subject::random(planets, radii, zones, sputniks, areas, margins)
     }
 
     #[test]
@@ -46,6 +47,7 @@ mod random {
 
             for planet in galaxy.planets {
                 assert_between(0.02, 0.05, planet.mass.radius);
+                assert_between(0.05, 0.105, planet.zone.radius);
             }
 
             for sputnik in galaxy.sputniks {
@@ -125,7 +127,7 @@ mod random {
 
     #[test]
     fn it_returns_none_if_it_fails_to_build_a_galaxy_with_the_parameters() {
-        let option = Subject::random(100..=100, 0.05..=0.05, 0..=0, 0.0..=0.0, 0.0..=0.0);
+        let option = Subject::random(100..=100, 0.05..=0.05, 0.0..=0.0, 0..=0, 0.0..=0.0, 0.0..=0.0);
         assert_eq!(option, None);
     }
 }
