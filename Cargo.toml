@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
 
 [dependencies]
+rand = "0.5.4"
 
 [dev-dependencies]
 assert_approx_eq = "1.0.0"
