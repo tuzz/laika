@@ -14,6 +14,13 @@ impl Point {
         Self { x: x1, y: y1 }
     }
 
+    pub fn distance(&self, other: Self) -> f64 {
+        let x = self.x - other.x;
+        let y = self.y - other.y;
+
+        (x.powf(2.0) + y.powf(2.0)).sqrt()
+    }
+
     fn normalize(x: f64) -> f64 {
         let m = x % 1.0;
 

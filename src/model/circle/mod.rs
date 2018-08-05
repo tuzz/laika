@@ -12,14 +12,11 @@ impl Circle {
     }
 
     pub fn contains(&self, point: Point) -> bool {
-        let x = self.center.x - point.x;
-        let y = self.center.y - point.y;
+        self.center.distance(point) < self.radius
+    }
 
-        let x2 = x.powf(2.0);
-        let y2 = y.powf(2.0);
-        let r2 = self.radius.powf(2.0);
-
-        x2 + y2 < r2
+    pub fn intersects(&self, other: Self) -> bool {
+        self.center.distance(other.center) < self.radius + other.radius
     }
 }
 

@@ -38,6 +38,18 @@ mod new {
     }
 }
 
+mod distance {
+    use super::*;
+
+    #[test]
+    fn it_returns_the_distance_to_other_point() {
+        let p1 = Subject::new(0.1, 0.3);
+        let p2 = Subject::new(0.4, 0.7);
+
+        assert_approx_eq!(p1.distance(p2), 0.5);
+    }
+}
+
 mod add {
     use super::*;
 
