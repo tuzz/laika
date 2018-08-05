@@ -46,3 +46,24 @@ mod area {
         assert_approx_eq!(centroid.y, 0.3);
     }
 }
+
+mod bounding_circle {
+    use super::*;
+
+    #[test]
+    fn it_returns_the_smallest_circle_that_contains_the_triangle() {
+        let a = Point::new(0.5, 0.5);
+        let b = Point::new(0.2, 0.2);
+        let c = Point::new(0.8, 0.2);
+
+        let triangle = Subject::new(a, b, c);
+        let circle = triangle.bounding_circle();
+        let center = circle.center;
+
+        assert_eq!(center.x, 0.5);
+        assert_eq!(center.y, 0.3);
+
+        let expected = b.distance(center);
+        assert_eq!(circle.radius, expected);
+    }
+}

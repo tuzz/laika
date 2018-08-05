@@ -1,10 +1,11 @@
 use super::point::Point;
+use super::circle::Circle;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Triangle {
-    a: Point,
-    b: Point,
-    c: Point,
+    pub a: Point,
+    pub b: Point,
+    pub c: Point,
 }
 
 impl Triangle {
@@ -29,6 +30,16 @@ impl Triangle {
         let y = (a.y + b.y + c.y) / 3.0;
 
         Point::new(x, y)
+    }
+
+    pub fn bounding_circle(&self) -> Circle {
+        let points = &[self.a, self.b, self.c];
+        let center = self.centroid();
+
+        let distances = points.iter().map(|p| p.distance(center));
+        let furthest = distances.max_by(|a, b| a.partial_cmp(b).unwrap());
+
+        Circle::new(center, furthest.unwrap())
     }
 }
 
