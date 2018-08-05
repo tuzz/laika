@@ -25,17 +25,20 @@ mod new {
 mod random {
     use super::*;
 
+    fn setup() -> Option<Subject> {
+        let planets = 3..=5;
+        let radii = 0.02..=0.02;
+        let sputniks = 7..=10;
+        let areas = 0.01..=0.02;
+        let margins = 0.02..=0.03;
+
+        Subject::random(planets, radii, sputniks, areas, margins)
+    }
+
     #[test]
     fn it_generates_a_random_galaxy_with_planet_and_sputnik_parameters() {
         for _ in 0..ITERATIONS {
-            let planets = 3..=5;
-            let radii = 0.02..=0.02;
-            let sputniks = 7..=10;
-            let areas = 0.01..=0.02;
-            let margins = 0.02..=0.03;
-
-            let option = Subject::random(planets, radii, sputniks, areas, margins);
-            let galaxy = option.unwrap();
+            let galaxy = setup().unwrap();
 
             assert_between(3, 5, galaxy.planets.len());
             assert_between(7, 10, galaxy.sputniks.len());
@@ -53,9 +56,9 @@ mod random {
 
     #[test]
     fn it_sets_ordinals_for_planets_starting_from_one() {
-        let galaxy = Subject::random(5..=5, 0.0..=0.0, 0..=0, 0.0..=0.0, 0.0..=0.0);
+        let galaxy = setup().unwrap();
 
-        for (ordinal, planet) in galaxy.unwrap().planets.iter().enumerate() {
+        for (ordinal, planet) in galaxy.planets.iter().enumerate() {
             assert_eq!(planet.ordinal, ordinal + 1);
         }
     }
@@ -63,11 +66,10 @@ mod random {
     #[test]
     fn it_positions_planets_away_from_other_planets() {
         for _ in 0..ITERATIONS {
-            let galaxy = Subject::random(2..=2, 0.05..=0.05, 0..=0, 0.0..=0.0, 0.0..=0.0);
-            let planets = galaxy.unwrap().planets;
+            let galaxy = setup().unwrap();
 
-            let zone1 = planets[0].zone;
-            let zone2 = planets[1].zone;
+            let zone1 = galaxy.planets[0].zone;
+            let zone2 = galaxy.planets[1].zone;
 
             assert!(!zone1.intersects(zone2))
         }
@@ -76,8 +78,7 @@ mod random {
     #[test]
     fn it_positions_sputniks_away_from_planets() {
         for _ in 0..ITERATIONS {
-            let option = Subject::random(1..=1, 0.05..=0.05, 1..=1, 0.01..=0.01, 0.0..=0.0);
-            let galaxy = option.unwrap();
+            let galaxy = setup().unwrap();
 
             let zone = galaxy.planets[0].zone;
             let hull = galaxy.sputniks[0].hull;
@@ -89,28 +90,36 @@ mod random {
     #[test]
     fn it_positions_planets_away_from_the_margin() {
         for _ in 0..ITERATIONS {
-            let option = Subject::random(1..=1, 0.1..=0.1, 0..=0, 0.0..=0.0, 0.05..=0.05);
-            let galaxy = option.unwrap();
-            let planet = galaxy.planets.first().unwrap();
-            let location = planet.mass.center;
+            let galaxy = setup().unwrap();
+            let zone = galaxy.planets[0].zone;
 
-            // radius of orbit + margin
-            assert_between(0.35, 0.65, location.x);
-            assert_between(0.35, 0.65, location.y);
+            let p1 = Point::new(zone.center.x, galaxy.margin);
+            let p2 = Point::new(zone.center.x, 1.0 - galaxy.margin);
+            let p3 = Point::new(galaxy.margin, zone.center.y);
+            let p4 = Point::new(1.0 - galaxy.margin, zone.center.y);
+
+            assert!(!zone.contains(p1));
+            assert!(!zone.contains(p2));
+            assert!(!zone.contains(p3));
+            assert!(!zone.contains(p4));
         }
     }
 
     #[test]
     fn it_positions_sputniks_away_from_the_margin() {
         for _ in 0..ITERATIONS {
-            let option = Subject::random(0..=0, 0.0..=0.0, 1..=1, 0.1..=0.1, 0.05..=0.05);
-            let galaxy = option.unwrap();
-            let sputnik = galaxy.sputniks.first().unwrap();
-            let location = sputnik.location;
+            let galaxy = setup().unwrap();
+            let circle = galaxy.sputniks[0].hull.bounding_circle();
 
-            // radius of hull + margin
-            assert_between(0.34, 0.66, location.x);
-            assert_between(0.34, 0.66, location.y);
+            let p1 = Point::new(circle.center.x, galaxy.margin);
+            let p2 = Point::new(circle.center.x, 1.0 - galaxy.margin);
+            let p3 = Point::new(galaxy.margin, circle.center.y);
+            let p4 = Point::new(1.0 - galaxy.margin, circle.center.y);
+
+            assert!(!circle.contains(p1));
+            assert!(!circle.contains(p2));
+            assert!(!circle.contains(p3));
+            assert!(!circle.contains(p4));
         }
     }
 
