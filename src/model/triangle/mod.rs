@@ -20,7 +20,7 @@ impl Triangle {
         let h = b.x * (c.y - a.y);
         let i = c.x * (a.y - b.y);
 
-        (g + h + i) / 2.0
+        (g + h + i).abs() / 2.0
     }
 
     pub fn centroid(&self) -> Point {

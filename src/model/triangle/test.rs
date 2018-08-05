@@ -34,6 +34,17 @@ mod area {
     }
 
     #[test]
+    fn it_is_positive() {
+        let a = Point::new(0.5, 0.5);
+        let b = Point::new(0.8, 0.2);
+        let c = Point::new(0.2, 0.2);
+
+        let triangle = Subject::new(a, b, c);
+
+        assert_approx_eq!(triangle.area(), 0.09);
+    }
+
+    #[test]
     fn it_calculates_the_centroid() {
         let a = Point::new(0.5, 0.5);
         let b = Point::new(0.2, 0.2);
