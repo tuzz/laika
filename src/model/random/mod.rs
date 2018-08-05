@@ -3,18 +3,24 @@ use rand::distributions::{Distribution,Uniform};
 use rand::distributions::uniform::SampleUniform;
 
 use std::cell::RefCell;
+use std::ops::RangeInclusive;
 
-struct Random<T> where T: SampleUniform {
+pub struct Random<T> where T: SampleUniform {
     distribution: Uniform<T>,
     generator: RefCell<ThreadRng>,
 }
 
 impl<T> Random<T> where T: SampleUniform {
-    pub fn new(lower: T, upper: T) -> Self {
+    pub fn new(range: RangeInclusive<T>) -> Self {
+        let (lower, upper) = range.into_inner();
         let distribution = Uniform::new_inclusive(lower, upper);
         let generator = RefCell::new(thread_rng());
 
         Random { distribution, generator }
+    }
+
+    pub fn sample_one(range: RangeInclusive<T>) -> T {
+        Self::new(range).sample()
     }
 
     pub fn sample(&self) -> T {
