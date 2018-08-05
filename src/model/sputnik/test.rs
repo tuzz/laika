@@ -1,9 +1,11 @@
 use super::*;
 
-fn setup() -> (Direction, Point, Sputnik) {
+type Subject = Sputnik;
+
+fn setup() -> (Direction, Point, Subject) {
     let heading = Direction::new(270.0);
     let location = Point::new(0.1, 0.2);
-    let sputnik = Sputnik::new(heading, location, 0.01);
+    let sputnik = Subject::new(heading, location, 0.01);
 
     (heading, location, sputnik)
 }
@@ -38,12 +40,12 @@ mod new {
     }
 
     #[test]
-    fn it_builds_a_hull_centered_at_half_half() {
-        let (_, _, sputnik) = setup();
+    fn it_builds_a_hull_centered_at_location() {
+        let (_, location, sputnik) = setup();
         let centroid = sputnik.hull.centroid();
 
-        assert_approx_eq!(centroid.x, 0.5);
-        assert_approx_eq!(centroid.y, 0.5);
+        assert_approx_eq!(centroid.x, location.x);
+        assert_approx_eq!(centroid.y, location.y);
     }
 }
 
@@ -83,5 +85,19 @@ mod no_thruster {
 
         assert_eq!(copy.thruster, None);
         assert_eq!(sputnik.thruster, None);
+    }
+}
+
+mod hull_radius {
+    use super::*;
+
+    #[test]
+    fn it_returns_the_radius_of_a_hull_with_given_area() {
+        let (_, _, sputnik) = setup();
+
+        let expected = sputnik.hull.bounding_circle().radius;
+        let actual = Subject::hull_radius(0.01);
+
+        assert_approx_eq!(expected, actual);
     }
 }
