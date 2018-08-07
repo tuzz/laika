@@ -14,8 +14,18 @@ struct Galaxy {
     margin: f64,
 }
 
+struct Rands {
+    planets: Random<usize>,
+    radii: Random<f64>,
+    zones: Random<f64>,
+    sputniks: Random<usize>,
+    areas: Random<f64>,
+    margins: Random<f64>,
+    locations: Random<f64>,
+    directions: Random<f64>,
+}
+
 type R<T> = RangeInclusive<T>;
-type RandF = Random<f64>;
 
 const MAX_ATTEMPTS: usize = 1000;
 
@@ -25,21 +35,25 @@ impl Galaxy {
     }
 
     fn random(planets: R<usize>, radii: R<f64>, zones: R<f64>, sputniks: R<usize>, areas: R<f64>, margins: R<f64>) -> Option<Self> {
-        let margin = Random::sample_one(margins);
-        let mut galaxy = Self::new(vec![], vec![], margin);
+        let rands = Rands {
+            planets: Random::new(planets),
+            radii: Random::new(radii),
+            zones: Random::new(zones),
+            sputniks: Random::new(sputniks),
+            areas: Random::new(areas),
+            margins: Random::new(margins),
+            locations: Random::new(0.0..=1.0),
+            directions: Random::new(0.0..=360.0),
+        };
 
-        let radii_rand = Random::new(radii);
-        let areas_rand = Random::new(areas);
-        let zones_rand = Random::new(zones);
-        let locations_rand = Random::new(margin..=1.0 - margin);
-        let directions_rand = Random::new(0.0..=360.0);
+        let mut galaxy = Self::new(vec![], vec![], rands.margins.sample());
 
-        for ordinal in 1..=Random::sample_one(planets) {
-            galaxy = galaxy.add_random_planet(&radii_rand, &zones_rand, &locations_rand, ordinal)?;
+        for ordinal in 1..=rands.planets.sample() {
+            galaxy = galaxy.add_random_planet(&rands, ordinal)?;
         }
 
-        for _ in 0..Random::sample_one(sputniks) {
-            galaxy = galaxy.add_random_sputnik(&areas_rand, &locations_rand, &directions_rand)?;
+        for _ in 0..rands.sputniks.sample() {
+            galaxy = galaxy.add_random_sputnik(&rands)?;
         }
 
         Some(galaxy)
@@ -55,27 +69,27 @@ impl Galaxy {
         Self::new(self.planets.clone(), sputniks, self.margin)
     }
 
-    fn add_random_planet(&self, radii: &RandF, zones: &RandF, locations: &RandF, ordinal: usize) -> Option<Self> {
-        let radius = radii.sample();
-        let zone = zones.sample();
+    fn add_random_planet(&self, rands: &Rands, ordinal: usize) -> Option<Self> {
+        let radius = rands.radii.sample();
+        let zone = rands.zones.sample();
         let height = Planet::zone_height(radius, zone);
-        let location = self.random_location(locations, height)?;
+        let location = self.random_location(&rands.locations, height)?;
 
         let planet = Planet::new(location, radius, zone, ordinal);
         Some(self.add_planet(planet))
     }
 
-    fn add_random_sputnik(&self, areas: &RandF, locations: &RandF, directions: &RandF) -> Option<Self> {
-        let heading = Direction::new(directions.sample());
-        let area = areas.sample();
+    fn add_random_sputnik(&self, rands: &Rands) -> Option<Self> {
+        let heading = Direction::new(rands.directions.sample());
+        let area = rands.areas.sample();
         let radius = Sputnik::hull_radius(area);
-        let location = self.random_location(locations, radius)?;
+        let location = self.random_location(&rands.locations, radius)?;
 
         let sputnik = Sputnik::new(heading, location, area);
         Some(self.add_sputnik(sputnik))
     }
 
-    fn random_location(&self, rand: &RandF, clearance: f64) -> Option<Point> {
+    fn random_location(&self, rand: &Random<f64>, clearance: f64) -> Option<Point> {
         for _ in 0..MAX_ATTEMPTS {
             let point = Point::new(rand.sample(), rand.sample());
             let circle = Circle::new(point, clearance);

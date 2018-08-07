@@ -4,16 +4,6 @@ type Subject<T> = Random<T>;
 
 const ITERATIONS: usize = 10_000;
 
-mod sample_one {
-    use super::*;
-
-    #[test]
-    fn it_draws_a_single_sample_from_the_distribution() {
-        let sample = Subject::sample_one(0..=1);
-        assert!(sample == 0 || sample == 1);
-    }
-}
-
 mod sample {
     use super::*;
 

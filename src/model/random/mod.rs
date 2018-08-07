@@ -19,10 +19,6 @@ impl<T> Random<T> where T: SampleUniform {
         Random { distribution, generator }
     }
 
-    pub fn sample_one(range: RangeInclusive<T>) -> T {
-        Self::new(range).sample()
-    }
-
     pub fn sample(&self) -> T {
         let generator = &mut *self.generator.borrow_mut();
         self.distribution.sample(generator)
