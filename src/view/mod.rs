@@ -12,6 +12,10 @@ impl View {
         let webpage = Webpage::new("laika");
         let _ = webpage.context;
 
+        webpage.animate(|delta, elapsed| {
+            console!(log, format!("delta: {}, elapsed: {}", delta, elapsed));
+        });
+
         View{}
     }
 }

@@ -1,6 +1,6 @@
 use super::webgl::WebGLRenderingContext;
 
-use stdweb::web::{document, Element, HtmlElement};
+use stdweb::web::{document, Element, HtmlElement, window};
 use stdweb::web::html_element::CanvasElement;
 use stdweb::unstable::TryInto;
 use stdweb::traits::{IHtmlElement, INode};
@@ -22,6 +22,20 @@ impl Webpage {
         Self::resize_canvas(&canvas);
 
         Self { context }
+    }
+
+    pub fn animate<F: Fn(f64, f64) + 'static>(&self, callback: F) {
+        Self::animate_recursive(callback, 0.0);
+    }
+
+    fn animate_recursive<F: Fn(f64, f64) + 'static>(callback: F, previous: f64) {
+        window().request_animation_frame(move |mut elapsed| {
+            elapsed *= 0.001;
+            let delta = elapsed - previous;
+
+            callback(delta, elapsed);
+            Self::animate_recursive(callback, elapsed);
+        });
     }
 
     fn create_canvas() -> CanvasElement {
