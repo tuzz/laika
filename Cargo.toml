@@ -5,6 +5,13 @@ authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
 
 [dependencies]
 rand = "0.5.4"
+stdweb = "0.4.8"
+stdweb-derive = "0.4.0"
+serde = "1.0.71"
+serde_derive = "1.0.71"
+
+[build-dependencies]
+webgl_generator = "0.1.0"
 
 [dev-dependencies]
 assert_approx_eq = "1.0.0"
