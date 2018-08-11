@@ -10,6 +10,8 @@ extern crate rand;
 mod model;
 mod view;
 
+use self::view::View;
+
 fn main() {
-    println!("Hello, world!");
+    let _ = View::new();
 }
