@@ -14,7 +14,7 @@ impl View {
     pub fn new() -> Self {
         let webpage = Webpage::new("laika");
 
-        let _ = Program::new(&webpage.context);
+        let _ = Program::default(&webpage.context);
 
         webpage.animate(|delta, elapsed| {
             console!(log, format!("delta: {}, elapsed: {}", delta, elapsed));

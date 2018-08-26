@@ -1,30 +1,19 @@
-use super::webgl::{WebGLRenderingContext, WebGLShader};
+pub mod fragment;
+pub mod vertex;
 
-pub struct Shader {
-    pub compiled: WebGLShader,
-}
+use super::webgl::{WebGLRenderingContext as GL, WebGLShader};
 
-impl Shader {
-    fn new(context: &WebGLRenderingContext, kind: u32, source: &str) -> Self {
+pub trait Shader {
+    fn new(context: &GL, source: &str) -> Self;
+
+    fn default(context: &GL) -> Self;
+
+    fn compile(context: &GL, kind: u32, source: &str) -> WebGLShader {
         let shader = context.create_shader(kind).expect("failed to create shader");
 
         context.shader_source(&shader, source);
         context.compile_shader(&shader);
 
-        Shader { compiled: shader }
-    }
-
-    pub fn vertex(context: &WebGLRenderingContext) -> Self {
-        let kind = WebGLRenderingContext::VERTEX_SHADER;
-        let source = include_str!("shader.vert");
-
-        Self::new(context, kind, source)
-    }
-
-    pub fn fragment(context: &WebGLRenderingContext) -> Self {
-        let kind = WebGLRenderingContext::FRAGMENT_SHADER;
-        let source = include_str!("shader.frag");
-
-        Self::new(context, kind, source)
+        shader
     }
 }
