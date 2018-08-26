@@ -4,8 +4,6 @@ pub mod vertex;
 use super::webgl::{WebGLRenderingContext as GL, WebGLShader};
 
 pub trait Shader {
-    fn new(context: &GL, source: &str) -> Self;
-
     fn default(context: &GL) -> Self;
 
     fn compile(context: &GL, kind: u32, source: &str) -> WebGLShader {
