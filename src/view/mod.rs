@@ -1,3 +1,4 @@
+mod shader;
 mod webgl;
 mod webpage;
 
