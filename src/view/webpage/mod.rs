@@ -24,7 +24,7 @@ impl Webpage {
         Self { context }
     }
 
-    pub fn animate<F: Fn(f64, f64) + 'static>(&self, callback: F) {
+    pub fn animate<F: Fn(f64, f64) + 'static>(callback: F) {
         Self::animate_recursive(callback, 0.0);
     }
 
