@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Chris Patuzzo <chris@patuzzo.co.uk>"]
 
 [dependencies]
-rand = "0.5.4"
+rand = { version = "0.5.4", features = ["stdweb"] }
 stdweb = "0.4.8"
 stdweb-derive = "0.4.0"
 serde = "1.0.71"
