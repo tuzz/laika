@@ -19,21 +19,24 @@ use self::webgl::WebGLRenderingContext as GL;
 impl View {
     pub fn new() -> Self {
         let webpage = Webpage::new("laika");
-        let context = webpage.context;
+        let context = &webpage.context;
         let viewport = Viewport::new(1.0, 1.0, 1.0, 1.0);
+        let program = Program::default(context);
+        let positions = Buffer::new(context, &[-0.5, 0.0, 0.0, 0.8, 0.7, -0.5]);
         let identity = [1.,0.,0.,0.,1.,0.,0.,0.,1.];
 
-        Webpage::animate(move |_delta, _elapsed| {
-            let program = Program::default(&context);
-            let positions = Buffer::new(&context, &[-0.5, 0.0, 0.0, 0.8, 0.7, -0.5]);
+        webpage.animate(move |context, _delta, _elapsed| {
+            viewport.clear(context);
 
-            viewport.clear(&context);
-
-            program.enable(&context);
-            program.set_attribute_from_buffer(&context, "a_position", &positions, 2);
-            program.set_uniform_from_slice(&context, "u_matrix", &identity);
+            program.enable(context);
+            program.set_attribute_from_buffer(context, "a_position", &positions, 2);
+            program.set_uniform_from_slice(context, "u_matrix", &identity);
 
             context.draw_arrays(GL::TRIANGLES, 0, 3);
+        });
+
+        webpage.animate(|_context, delta, elapsed| {
+            console!(log, format!("delta: {}, elapsed: {}", delta, elapsed))
         });
 
         View{}
