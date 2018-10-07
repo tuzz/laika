@@ -9,9 +9,16 @@ extern crate rand;
 
 mod model;
 mod view;
+mod controller;
 
+use self::model::Model;
 use self::view::View;
+use self::controller::Controller;
 
 fn main() {
-    let _ = View::new();
+    let model = Model::new();
+    let view = View::new();
+    let controller = Controller::new(model, view);
+
+    controller.handle_events();
 }

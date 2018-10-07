@@ -223,3 +223,13 @@ mod random_location {
         assert_eq!(location, None);
     }
 }
+
+mod default {
+    use super::*;
+
+    #[test]
+    fn it_generates_a_random_galaxy() {
+        let galaxy = Subject::default();
+        assert_between(3, 5, galaxy.planets.len());
+    }
+}

@@ -24,17 +24,17 @@ impl Webpage {
         Self { context }
     }
 
-    pub fn animate<F: Fn(&GL, f64, f64) + 'static>(&self, callback: F) {
-        Self::animate_recursive(self.context.clone(), callback, 0.0);
+    pub fn on_frame<F: FnMut(f64, f64) + 'static>(callback: F) {
+        Self::on_frame_recursive(callback, 0.0);
     }
 
-    fn animate_recursive<F: Fn(&GL, f64, f64) + 'static>(context: GL, callback: F, previous: f64) {
+    fn on_frame_recursive<F: FnMut(f64, f64) + 'static>(mut callback: F, previous: f64) {
         window().request_animation_frame(move |mut elapsed| {
             elapsed *= 0.001;
             let delta = elapsed - previous;
 
-            callback(&context, delta, elapsed);
-            Self::animate_recursive(context, callback, elapsed);
+            callback(delta, elapsed);
+            Self::on_frame_recursive(callback, elapsed);
         });
     }
 

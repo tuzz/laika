@@ -8,7 +8,7 @@ use super::sputnik::Sputnik;
 use std::ops::RangeInclusive;
 
 #[derive(Clone, Debug, PartialEq)]
-struct Galaxy {
+pub struct Galaxy {
     planets: Vec<Planet>,
     sputniks: Vec<Sputnik>,
     margin: f64,
@@ -121,6 +121,27 @@ impl Galaxy {
 
     fn extend<T: Clone>(vec: &Vec<T>, element: T) -> Vec<T> {
         [&vec[..], &[element]].concat()
+    }
+}
+
+impl Default for Galaxy {
+    fn default() -> Self {
+        for _ in 0..MAX_ATTEMPTS {
+            let planets = 3..=5;
+            let radii = 0.02..=0.03;
+            let zones = 1.5..=2.5;
+            let sputniks = 7..=10;
+            let areas = 0.01..=0.02;
+            let margins = 0.02..=0.03;
+
+            let option = Self::random(planets, radii, zones, sputniks, areas, margins);
+
+            if let Some(galaxy) = option {
+                return galaxy;
+            }
+        }
+
+        panic!("failed to generate random galaxy");
     }
 }
 

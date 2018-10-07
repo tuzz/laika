@@ -1,44 +1,41 @@
 mod buffer;
 mod program;
+mod scene;
 mod shader;
 mod viewport;
 mod webgl;
 mod webpage;
 
-use self::buffer::Buffer;
-use self::program::Program;
+use super::model::Model;
+
+use self::scene::Scene;
 use self::viewport::Viewport;
 use self::webpage::Webpage;
 
 pub struct View {
-
+    webpage: Webpage,
+    viewport: Viewport,
+    scene: Scene,
 }
-
-use self::webgl::WebGLRenderingContext as GL;
 
 impl View {
     pub fn new() -> Self {
         let webpage = Webpage::new("laika");
-        let context = &webpage.context;
         let viewport = Viewport::new(1.0, 1.0, 1.0, 1.0);
-        let program = Program::default(context);
-        let positions = Buffer::new(context, &[-0.5, 0.0, 0.0, 0.8, 0.7, -0.5]);
-        let identity = [1.,0.,0.,0.,1.,0.,0.,0.,1.];
+        let scene = Scene::new(&webpage.context);
 
-        webpage.animate(move |context, _delta, _elapsed| {
-            viewport.clear(context);
+        Self { webpage, viewport, scene }
+    }
 
-            program.enable(context);
-            program.set_attribute_from_buffer(context, "a_position", &positions, 2);
-            program.set_uniform_from_slice(context, "u_matrix", &identity);
+    pub fn clear(&self) {
+        self.viewport.clear(&self.webpage.context);
+    }
 
-            context.draw_arrays(GL::TRIANGLES, 0, 3);
-        });
+    pub fn render(&self, model: &Model) {
+        self.scene.render(model, &self.webpage.context);
+    }
 
-        webpage.animate(|_context, delta, elapsed| {
-            console!(log, format!("delta: {}, elapsed: {}", delta, elapsed))
-        });
-
-        View{}
+    pub fn on_frame<F: FnMut(f64, f64) + 'static>(callback: F) {
+        Webpage::on_frame(callback);
     }
 }
