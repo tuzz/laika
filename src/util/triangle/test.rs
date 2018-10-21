@@ -71,8 +71,8 @@ mod bounding_circle {
         let circle = triangle.bounding_circle();
         let center = circle.center;
 
-        assert_eq!(center.x, 0.5);
-        assert_eq!(center.y, 0.3);
+        assert_approx_eq!(center.x, 0.5);
+        assert_approx_eq!(center.y, 0.3);
 
         let expected = b.distance(center);
         assert_eq!(circle.radius, expected);

@@ -13,7 +13,7 @@ impl Triangle {
         Self { a, b, c }
     }
 
-    pub fn area(&self) -> f64 {
+    pub fn area(&self) -> f32 {
         let (a, b, c) = (self.a, self.b, self.c);
 
         let g = a.x * (b.y - c.y);

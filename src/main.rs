@@ -10,6 +10,7 @@ extern crate rand;
 mod model;
 mod view;
 mod controller;
+mod util;
 
 use self::model::Model;
 use self::view::View;

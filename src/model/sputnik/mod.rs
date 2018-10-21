@@ -1,7 +1,6 @@
-use super::direction::Direction;
-use super::point::Point;
+use ::util::{Direction, Point, Triangle};
+
 use super::thruster::Thruster;
-use super::triangle::Triangle;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Sputnik {
@@ -12,7 +11,7 @@ pub struct Sputnik {
 }
 
 impl Sputnik {
-    pub fn new(heading: Direction, location: Point, area: f64) -> Self {
+    pub fn new(heading: Direction, location: Point, area: f32) -> Self {
         let hull = Self::build_hull(location, area);
 
         Self {
@@ -35,14 +34,14 @@ impl Sputnik {
         Self { thruster: None, .. *self }
     }
 
-    pub fn hull_radius(area: f64) -> f64 {
+    pub fn hull_radius(area: f32) -> f32 {
         let arbitrary_point = Point::new(0.5, 0.5);
         let hull = Self::build_hull(arbitrary_point, area);
 
         hull.bounding_circle().radius
     }
 
-    fn build_hull(location: Point, area: f64) -> Triangle {
+    fn build_hull(location: Point, area: f32) -> Triangle {
         let x = (area / 2.0).sqrt();
         let y = x / 1.5;
 

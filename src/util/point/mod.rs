@@ -2,16 +2,16 @@ use std::ops::{Add,Sub};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Point {
-    pub x: f64,
-    pub y: f64,
+    pub x: f32,
+    pub y: f32,
 }
 
 impl Point {
-    pub fn new(x: f64, y: f64) -> Self {
+    pub fn new(x: f32, y: f32) -> Self {
         Self { x, y }
     }
 
-    pub fn distance(&self, other: Self) -> f64 {
+    pub fn distance(&self, other: Self) -> f32 {
         let x = self.x - other.x;
         let y = self.y - other.y;
 
@@ -25,7 +25,7 @@ impl Point {
         Self::new(x, y)
     }
 
-    fn normalize(x: f64) -> f64 {
+    fn normalize(x: f32) -> f32 {
         let m = x % 1.0;
 
         if m < 0.0 {

@@ -3,11 +3,11 @@ use super::point::Point;
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Circle {
     pub center: Point,
-    pub radius: f64,
+    pub radius: f32,
 }
 
 impl Circle {
-    pub fn new(center: Point, radius: f64) -> Self {
+    pub fn new(center: Point, radius: f32) -> Self {
         Circle { center, radius }
     }
 

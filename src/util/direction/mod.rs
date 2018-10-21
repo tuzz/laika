@@ -2,15 +2,15 @@ use std::ops::{Add,Sub};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Direction {
-    degrees: f64,
+    degrees: f32,
 }
 
 impl Direction {
-    pub fn new(degrees: f64) -> Self {
+    pub fn new(degrees: f32) -> Self {
         Self { degrees: Self::normalize(degrees) }
     }
 
-    fn normalize(degrees: f64) -> f64 {
+    fn normalize(degrees: f32) -> f32 {
         let m = degrees % 360.0;
 
         if m < 0.0 {

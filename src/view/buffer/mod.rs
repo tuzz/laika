@@ -4,6 +4,7 @@ use super::webgl::{WebGLBuffer, WebGLRenderingContext as GL};
 
 pub struct Buffer {
     buffer: WebGLBuffer,
+    len: usize,
 }
 
 impl Buffer {
@@ -14,10 +15,14 @@ impl Buffer {
         context.bind_buffer(GL::ARRAY_BUFFER, Some(&buffer));
         context.buffer_data_1(GL::ARRAY_BUFFER, Some(&vertices), GL::STATIC_DRAW);
 
-        Buffer { buffer }
+        Buffer { buffer, len: data.len() }
     }
 
     pub fn bind(&self, context: &GL) {
         context.bind_buffer(GL::ARRAY_BUFFER, Some(&self.buffer));
+    }
+
+    pub fn len(&self, elements_per_point: usize) -> i32 {
+        (self.len / elements_per_point) as i32
     }
 }

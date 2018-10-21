@@ -1,28 +1,26 @@
-use super::circle::Circle;
-use super::direction::Direction;
+use ::util::{Circle, Direction, Point, Random};
+
 use super::planet::Planet;
-use super::point::Point;
-use super::random::Random;
 use super::sputnik::Sputnik;
 
 use std::ops::RangeInclusive;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Galaxy {
-    planets: Vec<Planet>,
-    sputniks: Vec<Sputnik>,
-    margin: f64,
+    pub planets: Vec<Planet>,
+    pub sputniks: Vec<Sputnik>,
+    margin: f32,
 }
 
 struct Rands {
     planets: Random<usize>,
-    radii: Random<f64>,
-    zones: Random<f64>,
+    radii: Random<f32>,
+    zones: Random<f32>,
     sputniks: Random<usize>,
-    areas: Random<f64>,
-    margins: Random<f64>,
-    locations: Random<f64>,
-    directions: Random<f64>,
+    areas: Random<f32>,
+    margins: Random<f32>,
+    locations: Random<f32>,
+    directions: Random<f32>,
 }
 
 type R<T> = RangeInclusive<T>;
@@ -30,11 +28,11 @@ type R<T> = RangeInclusive<T>;
 const MAX_ATTEMPTS: usize = 1000;
 
 impl Galaxy {
-    fn new(planets: Vec<Planet>, sputniks: Vec<Sputnik>, margin: f64) -> Self {
+    fn new(planets: Vec<Planet>, sputniks: Vec<Sputnik>, margin: f32) -> Self {
         Galaxy { planets, sputniks, margin }
     }
 
-    fn random(planets: R<usize>, radii: R<f64>, zones: R<f64>, sputniks: R<usize>, areas: R<f64>, margins: R<f64>) -> Option<Self> {
+    fn random(planets: R<usize>, radii: R<f32>, zones: R<f32>, sputniks: R<usize>, areas: R<f32>, margins: R<f32>) -> Option<Self> {
         let rands = Rands {
             planets: Random::new(planets),
             radii: Random::new(radii),
@@ -89,7 +87,7 @@ impl Galaxy {
         Some(self.add_sputnik(sputnik))
     }
 
-    fn random_location(&self, rand: &Random<f64>, clearance: f64) -> Option<Point> {
+    fn random_location(&self, rand: &Random<f32>, clearance: f32) -> Option<Point> {
         for _ in 0..MAX_ATTEMPTS {
             let point = Point::new(rand.sample(), rand.sample());
             let circle = Circle::new(point, clearance);
