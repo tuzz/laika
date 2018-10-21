@@ -1,6 +1,6 @@
+use ::util::{Circle, Matrix};
+
 use ::model::Model;
-use ::util::Circle;
-use ::util::Matrix;
 
 use super::buffer::Buffer;
 use super::program::Program;
@@ -13,10 +13,12 @@ pub struct Scene {
     circle_points: Buffer,
 }
 
+pub const NUMBER_OF_POINTS: usize = 100;
+
 impl Scene {
     pub fn new(context: &GL) -> Self {
         let program = Program::default(context);
-        let circle_points = Self::circle_points(100, context);
+        let circle_points = Self::circle_points(NUMBER_OF_POINTS, context);
 
         program.enable(context);
 

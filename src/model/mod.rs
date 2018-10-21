@@ -1,3 +1,4 @@
+mod composition;
 mod element;
 mod galaxy;
 mod planet;
