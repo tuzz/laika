@@ -1,4 +1,4 @@
-use ::util::{Circle, Point};
+use ::util::{Circle, Color, Point};
 
 use super::composition::Composition;
 
@@ -10,7 +10,7 @@ pub struct Planet {
     pub ordinal: usize,
 }
 
-pub const NUMBER_OF_ELEMENTS: usize = 100;
+pub const NUMBER_OF_ELEMENTS: usize = 50;
 
 impl Planet {
     pub fn new(location: Point, radius: f32, zone_height: f32, ordinal: usize) -> Self {
@@ -23,6 +23,10 @@ impl Planet {
 
     pub fn zone_height(radius: f32, height: f32) -> f32 {
         radius * (height + 1.0)
+    }
+
+    pub fn colors(&self) -> Vec<&Color> {
+        self.composition.elements.iter().map(|e| &e.color).collect()
     }
 }
 

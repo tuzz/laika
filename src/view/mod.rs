@@ -21,7 +21,7 @@ pub struct View {
 impl View {
     pub fn new() -> Self {
         let webpage = Webpage::new("laika");
-        let viewport = Viewport::new(1.0, 1.0, 1.0, 1.0);
+        let viewport = Viewport::new(0.0, 0.0, 0.0, 1.0);
         let scene = Scene::new(&webpage.context);
 
         Self { webpage, viewport, scene }
